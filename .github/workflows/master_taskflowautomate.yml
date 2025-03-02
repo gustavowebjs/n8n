@@ -19,13 +19,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
-          cache: 'pnpm' # Habilita cache para instalar dependências mais rápido
+          cache: 'pnpm' # Habilita cache do pnpm
 
       - name: Install pnpm
         run: |
-          corepack enable
-          corepack prepare pnpm@10.2.1 --activate
-          pnpm --version # Apenas para verificar se instalou corretamente
+          npm install -g pnpm
+          echo "pnpm version:"
+          pnpm --version # Confirma instalação
 
       - name: Install dependencies, build, and test (pnpm)
         run: |
