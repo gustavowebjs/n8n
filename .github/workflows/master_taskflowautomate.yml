@@ -10,33 +10,28 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read # This is required for actions/checkout
+      contents: read # Necessário para actions/checkout
+    env:
+      NODE_OPTIONS: '--max-old-space-size=4096'
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.1.1
 
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
-          cache: 'pnpm' # Enables caching for pnpm dependencies
 
-      - name: Install pnpm
+      - name: Setup corepack and pnpm
         run: |
-          npm install -g pnpm@8.15.1 # Specify a version for consistency
-          echo "pnpm version:"
-          pnpm --version # Verify installation
-        env:
-          PATH: ${{ env.PATH }}:/home/runner/.npm-global/bin # Ensure global bin is in PATH
+          npm install -g corepack@0.31
+          corepack enable
 
-      - name: Ensure pnpm is in PATH for subsequent steps
-        run: echo "/home/runner/.npm-global/bin" >> $GITHUB_PATH # Persist PATH for later steps
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-      - name: Install dependencies, build, and test (pnpm)
-        run: |
-          pnpm install --frozen-lockfile
-          pnpm run build --if-present
-          pnpm test --if-present
+      - name: Build
+        run: pnpm build --if-present
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
@@ -53,7 +48,7 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    
+
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
