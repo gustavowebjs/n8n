@@ -1,0 +1,21 @@
+{
+  "name": "n8n-nodes-taskflowcrm",
+  "version": "1.0.0",
+  "description": "Simple TaskflowCRM node for n8n",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [
+    "n8n-community"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "nodes": [
+      "dist/TaskflowCRM.node.js"
+    ]
+  },
+  "dependencies": {
+    "n8n-workflow": "^1.0.0"
+  }
+}
