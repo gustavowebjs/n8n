@@ -19,17 +19,18 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
-          cache: 'pnpm' # Enables caching for pnpm
+          cache: 'pnpm' # Enables caching for pnpm dependencies
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 'latest' # Or specify a version like '8.15.1'
-          run_install: false # We'll handle installation manually in the next step
-
-      - name: Verify pnpm installation
         run: |
-          pnpm --version # Confirms pnpm is installed and available
+          npm install -g pnpm@8.15.1 # Specify a version for consistency
+          echo "pnpm version:"
+          pnpm --version # Verify installation
+        env:
+          PATH: ${{ env.PATH }}:/home/runner/.npm-global/bin # Ensure global bin is in PATH
+
+      - name: Ensure pnpm is in PATH for subsequent steps
+        run: echo "/home/runner/.npm-global/bin" >> $GITHUB_PATH # Persist PATH for later steps
 
       - name: Install dependencies, build, and test (pnpm)
         run: |
